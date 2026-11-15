@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es-EC" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Costo Real del Crédito — Simulador Educativo (Ecuador y Latam)</title>
+  <meta name="description" content="Simulador financiero educativo en español sobre el costo real de comprar a cuotas con tarjeta de crédito: sistema francés, trampa del pago mínimo y diferido sin intereses vs descuento de contado.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- Aviso educativo visible permanente -->
+  <div class="educational-banner" role="region" aria-label="Aviso legal y educativo">
+    <div class="container banner-inner">
+      <span class="badge-edu">AVISO</span>
+      <p>
+        <strong>Herramienta educativa. No es asesoría financiera.</strong>
+        Ningún valor prellenado corresponde a tasas reales ni estadísticas bancarias; todos los números iniciales son <em>valores de ejemplo</em> para fines didácticos.
+      </p>
+    </div>
+  </div>
+
+  <!-- Encabezado principal -->
+  <header class="site-header">
+    <div class="container header-grid">
+      <div class="brand-block">
+        <span class="eyebrow">Educación Financiera · Ecuador &amp; Latam</span>
+        <h1>Costo Real del Crédito</h1>
+        <p class="subtitle">
+          Descubre cuánto terminas pagando realmente al diferir en cuotas, abonar solo el mínimo o elegir entre «meses sin intereses» y un descuento de contado.
+        </p>
+      </div>
+      <div class="header-actions">
+        <button type="button" id="theme-toggle" class="btn-theme" aria-label="Cambiar a modo oscuro">
+          <span class="theme-icon" aria-hidden="true">◐</span>
+          <span id="theme-toggle-text">Modo oscuro</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main id="main-content" class="container main-container">
+    <!-- Pestañas de selección de calculadora -->
+    <nav class="tabs-nav" aria-label="Calculadoras del simulador">
+      <div class="tabs-list" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          id="tab-btn-1"
+          aria-controls="panel-calc-1"
+          aria-selected="true"
+          tabindex="0"
+          class="tab-btn active"
+        >
+          <span class="tab-step">1</span>
+          <span class="tab-label">Compra a N Cuotas</span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          id="tab-btn-2"
+          aria-controls="panel-calc-2"
+          aria-selected="false"
+          tabindex="-1"
+          class="tab-btn"
+        >
+          <span class="tab-step">2</span>
+          <span class="tab-label">Simulador de Pago Mínimo</span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          id="tab-btn-3"
+          aria-controls="panel-calc-3"
+          aria-selected="false"
+          tabindex="-1"
+          class="tab-btn"
+        >
+          <span class="tab-step">3</span>
+          <span class="tab-label">Sin Intereses vs. Contado</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===================================================================
+         CALCULADORA 1: COMPRA A N CUOTAS (SISTEMA FRANCÉS)
+         =================================================================== -->
+    <section
+      id="panel-calc-1"
+      role="tabpanel"
+      aria-labelledby="tab-btn-1"
+      class="calc-panel"
+    >
+      <div class="panel-intro">
+        <h2>Calculadora 1: Compra diferida a N cuotas con intereses (Sistema Francés)</h2>
+        <p>
+          Calcula la cuota fija mensual, el total de intereses que pagarás y la Tasa Efectiva Anual (TEA) equivalente a partir de la Tasa Nominal Anual (TNA) que tú ingreses.
+        </p>
+      </div>
+
+      <div class="calc-layout">
+        <!-- Formulario de entrada -->
+        <form id="form-calc1" class="card form-card" novalidate>
+          <div class="card-header-row">
+            <h3>Parámetros de la compra</h3>
+            <span class="example-pill">Valores de ejemplo</span>
+          </div>
+
+          <div class="field-group">
+            <label for="c1-principal">
+              Monto de la compra ($)
+              <span class="label-example">(Ejemplo: $1,000.00)</span>
+            </label>
+            <input
+              type="number"
+              id="c1-principal"
+              min="1"
+              step="10"
+              value="1000"
+              required
+              aria-describedby="c1-principal-help"
+            >
+            <small id="c1-principal-help" class="field-help">
+              Valor del producto o servicio que vas a diferir con tu tarjeta.
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label for="c1-months">
+              Número de cuotas mensuales (N)
+              <span class="label-example">(Ejemplo: 12 meses)</span>
+            </label>
+            <input
+              type="number"
+              id="c1-months"
+              min="1"
+              max="120"
+              step="1"
+              value="12"
+              required
+              aria-describedby="c1-months-help"
+            >
+            <small id="c1-months-help" class="field-help">
+              Plazo en meses para pagar la compra (ej. 3, 6, 12, 24, 36).
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label for="c1-rate">
+              Tasa Nominal Anual — TNA (%)
+              <span class="label-example">(Ejemplo hipotético: 24% anual)</span>
+            </label>
+            <input
+              type="number"
+              id="c1-rate"
+              min="0"
+              max="300"
+              step="0.1"
+              value="24"
+              required
+              aria-describedby="c1-rate-help"
+            >
+            <small id="c1-rate-help" class="field-help">
+              Revisa tu estado de cuenta e ingresa la tasa nominal anual que aplique a tu tarjeta.
+            </small>
+          </div>
+
+          <p id="c1-error" class="error-msg" role="alert" hidden></p>
+
+          <button type="submit" class="btn-primary">Actualizar cálculo</button>
+        </form>
+
+        <!-- Resultados -->
+        <div class="results-column">
+          <div class="kpi-grid">
+            <article class="card kpi-card kpi-highlight">
+              <span class="kpi-title">Cuota fija mensual</span>
+              <strong id="c1-out-payment" class="kpi-value">$94.56</strong>
+              <span class="kpi-sub">Tasa mensual periódica: <span id="c1-out-monthly-rate">2.00%</span></span>
+            </article>
+
+            <article class="card kpi-card">
+              <span class="kpi-title">Total pagado al final</span>
+              <strong id="c1-out-total" class="kpi-value">$1,134.72</strong>
+              <span id="c1-out-overcost" class="kpi-sub">+13.5% sobre el precio original</span>
+            </article>
+
+            <article class="card kpi-card">
+              <span class="kpi-title">Intereses totales</span>
+              <strong id="c1-out-interest" class="kpi-value text-danger">$134.72</strong>
+              <span class="kpi-sub">Costo financiero puro del diferido</span>
+            </article>
+
+            <article class="card kpi-card">
+              <span class="kpi-title">TEA equivalente</span>
+              <strong id="c1-out-tea" class="kpi-value">26.82%</strong>
+              <span class="kpi-sub">Tasa Efectiva Anual por capitalización mensual</span>
+            </article>
+          </div>
+
+          <!-- Barra de composición del pago -->
+          <div class="card composition-card">
+            <h4>Proporción de tu dinero: Capital vs. Intereses</h4>
+            <div class="stacked-bar" aria-hidden="true">
+              <div id="c1-bar-principal" class="bar-segment bar-principal" style="width: 88.1%;"></div>
+              <div id="c1-bar-interest" class="bar-segment bar-interest" style="width: 11.9%;"></div>
+            </div>
+            <div class="bar-legend">
+              <span class="legend-item">
+                <span class="dot dot-principal"></span>
+                <span id="c1-label-principal-pct">Capital (88.1%)</span>
+              </span>
+              <span class="legend-item">
+                <span class="dot dot-interest"></span>
+                <span id="c1-label-interest-pct">Intereses (11.9%)</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Explicación didáctica de la fórmula -->
+          <div class="card formula-card">
+            <h4>¿Cómo se calcula? Explicación en lenguaje simple</h4>
+            <p>
+              En el <strong>sistema de amortización francés</strong> todas las cuotas mensuales son iguales. Al principio pagas más intereses porque debes casi todo el capital; a medida que pasan los meses, el interés baja y abonas más al capital.
+            </p>
+            <div class="equation-box">
+              <p class="equation-title">1. Tasa mensual periódica (i):</p>
+              <code>i = TNA / 12</code>
+              <p class="equation-title">2. Cuota fija mensual (C):</p>
+              <code>C = P × [ i × (1 + i)<sup>n</sup> ] / [ (1 + i)<sup>n</sup> − 1 ]</code>
+              <p class="equation-title">3. Tasa Efectiva Anual (TEA):</p>
+              <code>TEA = (1 + i)<sup>12</sup> − 1</code>
+            </div>
+            <p class="formula-note">
+              Donde <strong>P</strong> es el monto de la compra, <strong>n</strong> es el número de cuotas mensuales y <strong>TNA</strong> es la tasa nominal anual expresada en decimal.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de amortización -->
+      <div class="card table-card">
+        <div class="table-header">
+          <h3>Tabla de amortización mes a mes</h3>
+          <p>Desglose exacto de cuánto va a intereses y cuánto reduce tu deuda en cada cuota.</p>
+        </div>
+        <div class="table-responsive" tabindex="0" role="region" aria-label="Tabla de amortización del sistema francés">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Mes (#)</th>
+                <th scope="col">Saldo inicial</th>
+                <th scope="col">Cuota del mes</th>
+                <th scope="col">Interés pagado</th>
+                <th scope="col">Abono a capital</th>
+                <th scope="col">Saldo final</th>
+              </tr>
+            </thead>
+            <tbody id="c1-schedule-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         CALCULADORA 2: SIMULADOR DE PAGO MÍNIMO
+         =================================================================== -->
+    <section
+      id="panel-calc-2"
+      role="tabpanel"
+      aria-labelledby="tab-btn-2"
+      class="calc-panel"
+      hidden
+    >
+      <div class="panel-intro">
+        <h2>Calculadora 2: El verdadero costo de pagar solo el «Pago Mínimo»</h2>
+        <p>
+          Simula mes a mes qué ocurre cuando dejas un saldo rotativo en tu tarjeta y te limitas a cubrir únicamente el porcentaje de pago mínimo exigido cada mes.
+        </p>
+      </div>
+
+      <div class="calc-layout">
+        <!-- Formulario Calculadora 2 -->
+        <form id="form-calc2" class="card form-card" novalidate>
+          <div class="card-header-row">
+            <h3>Datos del saldo rotativo</h3>
+            <span class="example-pill">Valores de ejemplo</span>
+          </div>
+
+          <div class="field-group">
+            <label for="c2-balance">
+              Saldo actual de la deuda ($)
+              <span class="label-example">(Ejemplo: $1,000.00)</span>
+            </label>
+            <input
+              type="number"
+              id="c2-balance"
+              min="10"
+              step="10"
+              value="1000"
+              required
+              aria-describedby="c2-balance-help"
+            >
+            <small id="c2-balance-help" class="field-help">
+              Deuda acumulada al corte suponiendo que no realizas nuevos consumos.
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label for="c2-rate">
+              Tasa Nominal Anual — TNA (%)
+              <span class="label-example">(Ejemplo hipotético: 24% anual)</span>
+            </label>
+            <input
+              type="number"
+              id="c2-rate"
+              min="0"
+              max="300"
+              step="0.1"
+              value="24"
+              required
+              aria-describedby="c2-rate-help"
+            >
+            <small id="c2-rate-help" class="field-help">
+              Tasa de financiamiento anual aplicable a saldos rotativos.
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label for="c2-min-pct">
+              Porcentaje de pago mínimo mensual (%)
+              <span class="label-example">(Ejemplo: 5% del saldo)</span>
+            </label>
+            <input
+              type="number"
+              id="c2-min-pct"
+              min="1"
+              max="100"
+              step="0.5"
+              value="5"
+              required
+              aria-describedby="c2-min-pct-help"
+            >
+            <small id="c2-min-pct-help" class="field-help">
+              Fracción del saldo que se exige como pago mínimo mensual (ej. entre 3% y 10%).
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label for="c2-min-floor">
+              Cuota piso mínima en dólares ($)
+              <span class="label-example">(Ejemplo: $15.00)</span>
+            </label>
+            <input
+              type="number"
+              id="c2-min-floor"
+              min="1"
+              max="500"
+              step="1"
+              value="15"
+              required
+              aria-describedby="c2-min-floor-help"
+            >
+            <small id="c2-min-floor-help" class="field-help">
+              Cuando el saldo baja mucho, se cobra un monto mínimo fijo (ej. $15) hasta liquidar la deuda.
+            </small>
+          </div>
+
+          <p id="c2-error" class="error-msg" role="alert" hidden></p>
+
+          <button type="submit" class="btn-primary">Simular pago mínimo</button>
+        </form>
+
+        <!-- Resultados Calculadora 2 -->
+        <div class="results-column">
+          <div id="c2-trap-warning" class="trap-alert" role="alert" hidden></div>
+
+          <div class="kpi-grid">
+            <article class="card kpi-card kpi-highlight">
+              <span class="kpi-title">Tiempo para saldar la deuda</span>
+              <strong id="c2-out-months" class="kpi-value">66 meses</strong>
+              <span id="c2-out-years" class="kpi-sub">Equivalente a 5.5 años sin nuevas compras</span>
+            </article>
+
+            <article class="card kpi-card">
+              <span class="kpi-title">Intereses totales acumulados</span>
+              <strong id="c2-out-interest" class="kpi-value text-danger">$553.60</strong>
+              <span id="c2-out-ratio" class="kpi-sub">Intereses equivalen al 55.4% del saldo original</span>
+            </article>
+
+            <article class="card kpi-card">
+              <span class="kpi-title">Total desembolsado</span>
+              <strong id="c2-out-total" class="kpi-value">$1,553.60</strong>
+              <span class="kpi-sub">Suma de todos los pagos mínimos realizados</span>
+            </article>
+
+            <article class="card kpi-card">
+              <span class="kpi-title">Pago mínimo del Mes 1</span>
+              <strong id="c2-out-first-min" class="kpi-value">$50.00</strong>
+              <span class="kpi-sub">Engañosamente bajo al inicio, pero alarga el plazo</span>
+            </article>
+          </div>
+
+          <!-- Gráfico SVG hecho a mano: Saldo vs Tiempo -->
+          <div class="card chart-card">
+            <div class="chart-header">
+              <h4>Curva de Saldo Pendiente vs. Intereses Acumulados</h4>
+              <div class="chart-legend">
+                <span class="legend-item">
+                  <span class="line-swatch swatch-primary"></span> Saldo de deuda ($)
+                </span>
+                <span class="legend-item">
+                  <span class="line-swatch swatch-danger-dashed"></span> Intereses pagados acumulados ($)
+                </span>
+              </div>
+            </div>
+            <div id="c2-svg-container" class="svg-wrapper"></div>
+          </div>
+
+          <!-- Explicación de la fórmula -->
+          <div class="card formula-card">
+            <h4>¿Por qué el pago mínimo tarda tantos años?</h4>
+            <p>
+              Cuando pagas un porcentaje pequeño del saldo (por ejemplo, 5%), una gran parte de ese pago se destina a cubrir el interés mensual (por ejemplo, 2% mensual si la TNA es 24%), por lo que el saldo real solo disminuye un 3% cada mes.
+            </p>
+            <div class="equation-box">
+              <p class="equation-title">1. Interés generado en el mes t (I<sub>t</sub>):</p>
+              <code>I<sub>t</sub> = Saldo<sub>t−1</sub> × (TNA / 12)</code>
+              <p class="equation-title">2. Pago mínimo del mes t (Pago<sub>t</sub>):</p>
+              <code>Pago<sub>t</sub> = mín( Saldo<sub>t−1</sub> + I<sub>t</sub> , máx( Saldo<sub>t−1</sub> × %Mínimo , Piso ) )</code>
+              <p class="equation-title">3. Nuevo saldo al final del mes t:</p>
+              <code>Saldo<sub>t</sub> = Saldo<sub>t−1</sub> + I<sub>t</sub> − Pago<sub>t</sub></code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de evolución mes a mes -->
+      <div class="card table-card">
+        <div class="table-header">
+          <h3>Historial mes a mes de la simulación de pago mínimo</h3>
+          <p>Observa cómo la porción que abona a capital se encoge a medida que el pago mínimo porcentual disminuye.</p>
+        </div>
+        <div class="table-responsive" tabindex="0" role="region" aria-label="Tabla de simulación mes a mes del pago mínimo">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Mes (#)</th>
+                <th scope="col">Saldo inicial</th>
+                <th scope="col">Interés del mes</th>
+                <th scope="col">Pago mínimo</th>
+                <th scope="col">Abono a capital</th>
+                <th scope="col">Saldo restante</th>
+              </tr>
+            </thead>
+            <tbody id="c2-schedule-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         CALCULADORA 3: DIFERIDO SIN INTERESES VS DESCUENTO DE CONTADO
+         =================================================================== -->
+    <section
+      id="panel-calc-3"
+      role="tabpanel"
+      aria-labelledby="tab-btn-3"
+      class="calc-panel"
+      hidden
+    >
+      <div class="panel-intro">
+        <h2>Calculadora 3: «Diferido sin intereses» vs. Descuento por pago de contado</h2>
+        <p>
+          Muchas veces un comercio ofrece «12 meses sin intereses» al precio de lista, pero otorga un descuento si pagas de contado (efectivo/transferencia). Compara ambas opciones trayendo las cuotas a <strong>Valor Presente (VP)</strong> con tu tasa de costo de oportunidad.
+        </p>
+      </div>
+
+      <div class="calc-layout">
+        <!-- Formulario Calculadora 3 -->
+        <form id="form-calc3" class="card form-card" novalidate>
+          <div class="card-header-row">
+            <h3>Opciones de compra</h3>
+            <span class="example-pill">Valores de ejemplo</span>
+          </div>
+
+          <div class="field-group">
+            <label for="c3-price">
+              Precio de lista «sin intereses» ($)
+              <span class="label-example">(Ejemplo: $1,000.00)</span>
+            </label>
+            <input
+              type="number"
+              id="c3-price"
+              min="1"
+              step="10"
+              value="1000"
+              required
+              aria-describedby="c3-price-help"
+            >
+            <small id="c3-price-help" class="field-help">
+              Precio total si decides diferir en cuotas con tarjeta de crédito.
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label for="c3-discount">
+              Descuento por pago de contado (%)
+              <span class="label-example">(Ejemplo: 8% de descuento)</span>
+            </label>
+            <input
+              type="number"
+              id="c3-discount"
+              min="0"
+              max="90"
+              step="0.5"
+              value="8"
+              required
+              aria-describedby="c3-discount-help"
+            >
+            <small id="c3-discount-help" class="field-help">
+              Rebaja que te ofrecen por pagar al instante en efectivo, débito o transferencia.
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label for="c3-months">
+              Número de cuotas «sin intereses» (N)
+              <span class="label-example">(Ejemplo: 12 meses)</span>
+            </label>
+            <input
+              type="number"
+              id="c3-months"
+              min="1"
+              max="120"
+              step="1"
+              value="12"
+              required
+              aria-describedby="c3-months-help"
+            >
+            <small id="c3-months-help" class="field-help">
+              Cantidad de pagos mensuales iguales en los que se divide el precio de lista.
+            </small>
+          </div>
+
+          <div class="field-group">
+            <label for="c3-opp-rate">
+              Tu tasa de oportunidad anual (%)
+              <span class="label-example">(Ejemplo hipotético: 6% anual)</span>
+            </label>
+            <input
+              type="number"
+              id="c3-opp-rate"
+              min="0"
+              max="200"
+              step="0.25"
+              value="6"
+              required
+              aria-describedby="c3-opp-rate-help"
+            >
+            <small id="c3-opp-rate-help" class="field-help">
+              Rendimiento anual neto que podrías obtener si conservas tu dinero en una cuenta remunerada o depósito a plazo mientras pagas las cuotas.
+            </small>
+          </div>
+
+          <p id="c3-error" class="error-msg" role="alert" hidden></p>
+
+          <button type="submit" class="btn-primary">Comparar opciones</button>
+        </form>
+
+        <!-- Resultados Calculadora 3 -->
+        <div class="results-column">
+          <!-- Veredicto destacado -->
+          <div id="c3-verdict-banner" class="verdict-card verdict-cash" role="status" aria-live="polite">
+            <span class="verdict-badge">Veredicto en Valor Presente</span>
+            <h3 id="c3-verdict-title">Conviene pagar de CONTADO con descuento</h3>
+            <p id="c3-verdict-desc"></p>
+          </div>
+
+          <div class="kpi-grid">
+            <article class="card kpi-card">
+              <span class="kpi-title">Precio de contado hoy</span>
+              <strong id="c3-out-cash-price" class="kpi-value">$920.00</strong>
+              <span id="c3-out-discount-amt" class="kpi-sub">Ahorro inmediato de $80.00</span>
+            </article>
+
+            <article class="card kpi-card kpi-highlight">
+              <span class="kpi-title">Valor Presente de las cuotas (VP)</span>
+              <strong id="c3-out-pv-deferred" class="kpi-value">$968.24</strong>
+              <span id="c3-out-installment" class="kpi-sub">12 cuotas de $83.33</span>
+            </article>
+
+            <article class="card kpi-card">
+              <span class="kpi-title">Costo implícito (TEA oculta)</span>
+              <strong id="c3-out-implicit-tea" class="kpi-value text-danger">16.86%</strong>
+              <span id="c3-out-implicit-tna" class="kpi-sub">TNA implícita: 15.69%</span>
+            </article>
+          </div>
+
+          <!-- Explicación de la fórmula -->
+          <div class="card formula-card">
+            <h4>¿Cómo funciona el Valor Presente y el interés implícito?</h4>
+            <p>
+              Un dólar pagado dentro de 12 meses vale menos que un dólar hoy si tu dinero puede generar rendimientos (<strong>costo de oportunidad</strong>). Además, cuando rechazas un descuento de contado por pagar a plazos, ese descuento perdido actúa exactamente como un <strong>interés oculto</strong>.
+            </p>
+            <div class="equation-box">
+              <p class="equation-title">1. Precio de contado con descuento (P<sub>contado</sub>):</p>
+              <code>P<sub>contado</sub> = P<sub>lista</sub> × (1 − d)</code>
+              <p class="equation-title">2. Tasa de oportunidad mensual (r<sub>m</sub>) y Cuota (C):</p>
+              <code>r<sub>m</sub> = R<sub>anual</sub> / 12 &nbsp;&nbsp;|&nbsp;&nbsp; C = P<sub>lista</sub> / n</code>
+              <p class="equation-title">3. Valor Presente de las N cuotas (VP):</p>
+              <code>VP = ∑<sub>t=1..n</sub> [ C / (1 + r<sub>m</sub>)<sup>t</sup> ] = C × [ 1 − (1 + r<sub>m</sub>)<sup>−n</sup> ] / r<sub>m</sub></code>
+              <p class="equation-title">4. Regla de decisión:</p>
+              <code>Si P<sub>contado</sub> &lt; VP ⇒ Conviene pagar de Contado. Si VP &lt; P<sub>contado</sub> ⇒ Conviene Diferir.</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de flujos descontados -->
+      <div class="card table-card">
+        <div class="table-header">
+          <h3>Desglose del Valor Presente de cada cuota mensual</h3>
+          <p>Cada cuota futura se descuenta al día de hoy usando tu tasa de oportunidad ingresada.</p>
+        </div>
+        <div class="table-responsive" tabindex="0" role="region" aria-label="Tabla de flujos descontados a valor presente">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Período</th>
+                <th scope="col">Cuota nominal ($)</th>
+                <th scope="col">Factor de descuento (1+r)<sup>−t</sup></th>
+                <th scope="col">Valor Presente hoy ($)</th>
+              </tr>
+            </thead>
+            <tbody id="c3-flows-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pie de página -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-disclaimer">
+        <strong>Herramienta educativa. No es asesoría financiera.</strong> Los cálculos son referenciales y no incluyen seguros de desgravamen, contribuciones legales ni comisiones operativas particulares.
+      </p>
+      <p class="footer-author">
+        Hecho por Bryan Román · <a href="https://linkedin.com/in/bryan-roman-ai" target="_blank" rel="noopener noreferrer">linkedin.com/in/bryan-roman-ai</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
