@@ -16,7 +16,7 @@
       <span class="badge-edu">AVISO</span>
       <p>
         <strong>Herramienta educativa. No es asesoría financiera.</strong>
-        Ningún valor prellenado corresponde a tasas reales ni estadísticas bancarias; todos los números iniciales son <em>valores de ejemplo</em> para fines didácticos.
+        Montos y plazos son <em>valores de ejemplo</em>. Las tasas de referencia son oficiales (BCE, Superfinanciera, BCRP; noviembre 2026), convertidas de efectiva a nominal anual, y cada una enlaza a su fuente. Tu crédito puede tener otra tasa: usa la de tu contrato.
       </p>
     </div>
   </div>
@@ -107,7 +107,7 @@
         <form id="form-calc1" class="card form-card" novalidate>
           <div class="card-header-row">
             <h3>Parámetros de la compra</h3>
-            <span class="example-pill">Valores de ejemplo</span>
+            <span class="example-pill">Montos de ejemplo</span>
           </div>
 
           <div class="field-group">
@@ -150,22 +150,37 @@
           </div>
 
           <div class="field-group">
+            <label for="c1-rate-preset">
+              Tasa oficial de referencia (Ecuador y LATAM)
+              <span class="label-example">(Opcional: carga datos públicos oficiales)</span>
+            </label>
+            <select id="c1-rate-preset" class="form-select" aria-label="Seleccionar país o tasa referencial oficial">
+              <option value="custom">Personalizada (tu contrato)</option>
+              <option value="ec_ref" selected>Ecuador · BCE referencial consumo · nov-2026 · 15.69% efectiva</option>
+              <option value="ec_max">Ecuador · BCE máxima consumo · nov-2026 · 16.77% efectiva</option>
+              <option value="co_usura">Colombia · usura consumo (tope) · nov-2026 · 28.34% efectiva</option>
+              <option value="pe_max">Perú · BCRP tasa máxima consumo (tope) · nov-2026 · 114.68% efectiva</option>
+            </select>
+            <div id="c1-preset-info" class="preset-source-badge">Fuente oficial: se muestra al cargar la página.</div>
+          </div>
+
+          <div class="field-group">
             <label for="c1-rate">
               Tasa Nominal Anual — TNA (%)
-              <span class="label-example">(Ejemplo hipotético: 24% anual)</span>
+              <span class="label-example">(Editable libremente)</span>
             </label>
             <input
               type="number"
               id="c1-rate"
               min="0"
               max="300"
-              step="0.1"
-              value="24"
+              step="0.01"
+              value="14.66"
               required
               aria-describedby="c1-rate-help"
             >
             <small id="c1-rate-help" class="field-help">
-              Revisa tu estado de cuenta e ingresa la tasa nominal anual que aplique a tu tarjeta.
+              Puedes modificar el porcentaje libremente o seleccionar una tasa referencial oficial arriba.
             </small>
           </div>
 
@@ -288,7 +303,7 @@
         <form id="form-calc2" class="card form-card" novalidate>
           <div class="card-header-row">
             <h3>Datos del saldo rotativo</h3>
-            <span class="example-pill">Valores de ejemplo</span>
+            <span class="example-pill">Montos de ejemplo</span>
           </div>
 
           <div class="field-group">
@@ -311,17 +326,32 @@
           </div>
 
           <div class="field-group">
+            <label for="c2-rate-preset">
+              Tasa oficial de referencia (Ecuador y LATAM)
+              <span class="label-example">(Opcional: carga datos públicos oficiales)</span>
+            </label>
+            <select id="c2-rate-preset" class="form-select" aria-label="Seleccionar país o tasa referencial oficial para pago mínimo">
+              <option value="custom">Personalizada (tu contrato)</option>
+              <option value="ec_ref" selected>Ecuador · BCE referencial consumo · nov-2026 · 15.69% efectiva</option>
+              <option value="ec_max">Ecuador · BCE máxima consumo · nov-2026 · 16.77% efectiva</option>
+              <option value="co_usura">Colombia · usura consumo (tope) · nov-2026 · 28.34% efectiva</option>
+              <option value="pe_max">Perú · BCRP tasa máxima consumo (tope) · nov-2026 · 114.68% efectiva</option>
+            </select>
+            <div id="c2-preset-info" class="preset-source-badge">Fuente oficial: se muestra al cargar la página.</div>
+          </div>
+
+          <div class="field-group">
             <label for="c2-rate">
               Tasa Nominal Anual — TNA (%)
-              <span class="label-example">(Ejemplo hipotético: 24% anual)</span>
+              <span class="label-example">(Editable libremente)</span>
             </label>
             <input
               type="number"
               id="c2-rate"
               min="0"
               max="300"
-              step="0.1"
-              value="24"
+              step="0.01"
+              value="14.66"
               required
               aria-describedby="c2-rate-help"
             >
@@ -485,7 +515,7 @@
         <form id="form-calc3" class="card form-card" novalidate>
           <div class="card-header-row">
             <h3>Opciones de compra</h3>
-            <span class="example-pill">Valores de ejemplo</span>
+            <span class="example-pill">Montos de ejemplo</span>
           </div>
 
           <div class="field-group">
@@ -548,17 +578,29 @@
           </div>
 
           <div class="field-group">
+            <label for="c3-opp-preset">
+              Tasa oficial de ahorro (costo de oportunidad)
+              <span class="label-example">(Opcional: tasa pasiva referencial)</span>
+            </label>
+            <select id="c3-opp-preset" class="form-select" aria-label="Seleccionar tasa pasiva o de oportunidad oficial">
+              <option value="custom">Personalizada</option>
+              <option value="ec_dpf" selected>Ecuador · BCE depósito a plazo 181-360 días · nov-2026 · 4.83% efectiva</option>
+            </select>
+            <div id="c3-preset-info" class="preset-source-badge">Fuente oficial: se muestra al cargar la página.</div>
+          </div>
+
+          <div class="field-group">
             <label for="c3-opp-rate">
               Tu tasa de oportunidad anual (%)
-              <span class="label-example">(Ejemplo hipotético: 6% anual)</span>
+              <span class="label-example">(Editable libremente)</span>
             </label>
             <input
               type="number"
               id="c3-opp-rate"
               min="0"
               max="200"
-              step="0.25"
-              value="6"
+              step="0.01"
+              value="4.73"
               required
               aria-describedby="c3-opp-rate-help"
             >

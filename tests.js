@@ -11,7 +11,9 @@ const {
   calculateFrenchAmortization,
   simulateMinimumPayment,
   compareZeroInterestVsCashDiscount,
-  buildMinimumPaymentSvg
+  buildMinimumPaymentSvg,
+  COUNTRY_RATE_PRESETS,
+  OPPORTUNITY_RATE_PRESETS
 } = require('./app.js');
 
 let passed = 0;
@@ -205,6 +207,30 @@ console.log('\n3) Calculadora 3: Diferido sin intereses vs. Descuento de contado
   assertClose(cmp2.cashPrice, 980.00, 0.01, 'Precio de contado con 2% de descuento = $980.00');
   assertClose(cmp2.presentValueOfInstallments, 937.92, 0.02, 'VP de 12 cuotas al 12% TNA (1% mensual) = $937.92');
   assertEqual(cmp2.recommendation, 'DIFERIDO', 'Recomendación correcta cuando el rendimiento supera al descuento: DIFERIDO');
+}
+
+// ---------------------------------------------------------------------------
+// 4. Tasas oficiales de referencia (verificadas 21-nov-2026) y conversión efectiva -> nominal
+// ---------------------------------------------------------------------------
+console.log('\n4) Tasas oficiales de referencia (Ecuador y LATAM)');
+
+{
+  assertEqual(COUNTRY_RATE_PRESETS.ec_ref.ea, 15.69, 'BCE referencial consumo nov-2026 = 15.69% efectiva');
+  assertEqual(COUNTRY_RATE_PRESETS.ec_max.ea, 16.77, 'BCE máxima consumo nov-2026 = 16.77% efectiva');
+  assertEqual(COUNTRY_RATE_PRESETS.co_usura.ea, 28.34, 'Colombia usura consumo nov-2026 = 28.34% E.A.');
+  assertEqual(COUNTRY_RATE_PRESETS.pe_max.ea, 114.68, 'Perú BCRP tasa máxima consumo nov-2026 = 114.68%');
+  assertEqual(OPPORTUNITY_RATE_PRESETS.ec_dpf.ea, 4.83, 'BCE pasiva 181-360 días nov-2026 = 4.83%');
+  assertEqual(COUNTRY_RATE_PRESETS.ec_ref.rate, 14.66, '15.69% efectiva = 14.66% TNA');
+  for (const k of ['ec_ref', 'ec_max', 'co_usura', 'pe_max']) {
+    const p = COUNTRY_RATE_PRESETS[k];
+    assertEqual(/^https:\/\//.test(p.url), true, 'Preset ' + k + ' tiene enlace a su fuente');
+    // Ida y vuelta: la TNA cargada debe reproducir la tasa efectiva publicada
+    const r = calculateFrenchAmortization({ principal: 1000, months: 12, annualNominalRatePct: p.rate });
+    assertClose(r.effectiveAnnualRatePct, p.ea, 0.02, 'TNA de ' + k + ' reproduce su tasa efectiva publicada');
+  }
+  // $1000 a 12 meses con la referencial BCE: i = 14.66%/12
+  const rEc = calculateFrenchAmortization({ principal: 1000, months: 12, annualNominalRatePct: 14.66 });
+  assertClose(rEc.monthlyPayment, 90.10, 0.01, 'Ecuador $1000 a 12 meses con 14.66% TNA -> cuota $90.10');
 }
 
 // ---------------------------------------------------------------------------

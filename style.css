@@ -373,7 +373,8 @@ body {
   margin-left: 0.25rem;
 }
 
-.field-group input[type="number"] {
+.field-group input[type="number"],
+.field-group select {
   width: 100%;
   padding: 0.65rem 0.8rem;
   font-size: 1rem;
@@ -385,7 +386,25 @@ body {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.field-group input[type="number"]:focus {
+.field-group select {
+  cursor: pointer;
+  margin-bottom: 0.35rem;
+}
+
+.preset-source-badge {
+  display: block;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-subtle);
+  border-left: 3px solid var(--accent-primary);
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.field-group input[type="number"]:focus,
+.field-group select:focus {
   outline: none;
   border-color: var(--accent-primary);
   box-shadow: var(--focus-ring);

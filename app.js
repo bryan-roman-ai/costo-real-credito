@@ -489,6 +489,35 @@
     }) + '%';
   }
 
+  /**
+   * Tasas oficiales de referencia (verificadas el 21-nov-2026 en la fuente indicada).
+   * Los bancos centrales publican tasas EFECTIVAS anuales (ea); el simulador trabaja con
+   * tasa nominal anual (TNA = 12 × ((1 + ea)^(1/12) − 1)), así que se convierten al cargarlas.
+   */
+  function eaToTna(eaPct) {
+    return round2(12 * (Math.pow(1 + eaPct / 100, 1 / 12) - 1) * 100);
+  }
+
+  function preset(eaPct, source, url) {
+    return { ea: eaPct, rate: eaToTna(eaPct), source: source, url: url };
+  }
+
+  const BCE_URL = 'https://contenido.bce.fin.ec/documentos/Estadisticas/SectorMonFin/TasasInteres/Indice.htm';
+  const COUNTRY_RATE_PRESETS = {
+    custom: { ea: null, rate: null, source: 'Ingresa la tasa nominal anual (TNA) de tu contrato o estado de cuenta.', url: null },
+    ec_ref: preset(15.69, 'Banco Central del Ecuador · tasa activa efectiva referencial, segmento Consumo, noviembre 2026', BCE_URL),
+    ec_max: preset(16.77, 'Banco Central del Ecuador · tasa activa efectiva máxima, segmento Consumo, noviembre 2026', BCE_URL),
+    co_usura: preset(28.34, 'Colombia · tasa de usura para crédito de consumo y ordinario certificada por la Superintendencia Financiera, noviembre 2026 (tope legal, no promedio)',
+      'https://abceconomia.co/2026/11/03/tasa-usura-noviembre-colombia/'),
+    pe_max: preset(114.68, 'Banco Central de Reserva del Perú · tasa máxima de interés convencional compensatorio para créditos de consumo en soles, vigente desde el 02-nov-2026 (tope legal, no promedio)',
+      'https://estadisticas.bcrp.gob.pe/estadisticas/series/diarias/resultados/PD38590DD/html')
+  };
+
+  const OPPORTUNITY_RATE_PRESETS = {
+    custom: { ea: null, rate: null, source: 'Ingresa la tasa anual que ganarías con tu dinero en otra alternativa.', url: null },
+    ec_dpf: preset(4.83, 'Banco Central del Ecuador · tasa pasiva efectiva referencial, depósitos a plazo de 181 a 360 días, noviembre 2026', BCE_URL)
+  };
+
   function initBrowserApp() {
     if (typeof document === 'undefined') return;
 
@@ -837,6 +866,59 @@
       formC3.addEventListener('input', renderCalc3);
       renderCalc3();
     }
+
+    // 6. Enlace de selectores de referencia oficial a campos de entrada
+    function showPresetInfo(infoEl, entry) {
+      if (!infoEl || !entry) return;
+      infoEl.textContent = '';
+      const strong = document.createElement('strong');
+      strong.textContent = entry.ea === null ? 'Tasa personalizada: ' : 'Fuente oficial: ';
+      infoEl.appendChild(strong);
+      let text = entry.source;
+      if (entry.ea !== null) {
+        text += '. ' + formatPct(entry.ea, 2) + ' efectiva anual = ' + formatPct(entry.rate, 2) + ' nominal anual (TNA). ';
+      }
+      infoEl.appendChild(document.createTextNode(text));
+      if (entry.url) {
+        const a = document.createElement('a');
+        a.href = entry.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        a.textContent = 'Ver fuente';
+        infoEl.appendChild(a);
+      }
+    }
+
+    function wirePreset(selectId, inputId, infoId, presetsMap, renderFn) {
+      const selectEl = document.getElementById(selectId);
+      const inputEl = document.getElementById(inputId);
+      const infoEl = document.getElementById(infoId);
+      if (!selectEl || !inputEl) return;
+      const initial = presetsMap[selectEl.value];
+      if (initial && initial.rate !== null) inputEl.value = initial.rate;
+      showPresetInfo(infoEl, initial);
+
+      selectEl.addEventListener('change', function () {
+        const entry = presetsMap[selectEl.value];
+        if (entry && entry.rate !== null) inputEl.value = entry.rate;
+        showPresetInfo(infoEl, entry);
+        if (renderFn) renderFn();
+      });
+
+      inputEl.addEventListener('input', function () {
+        const currentVal = parseFloat(inputEl.value);
+        let matched = 'custom';
+        for (const k in presetsMap) {
+          if (presetsMap[k].rate !== null && Math.abs(presetsMap[k].rate - currentVal) < 0.001) { matched = k; break; }
+        }
+        if (selectEl.value !== matched) {
+          selectEl.value = matched;
+          showPresetInfo(infoEl, presetsMap[matched]);
+        }
+      });
+    }
+
+    wirePreset('c1-rate-preset', 'c1-rate', 'c1-preset-info', COUNTRY_RATE_PRESETS, renderCalc1);
+    wirePreset('c2-rate-preset', 'c2-rate', 'c2-preset-info', COUNTRY_RATE_PRESETS, renderCalc2);
+    wirePreset('c3-opp-preset', 'c3-opp-rate', 'c3-preset-info', OPPORTUNITY_RATE_PRESETS, renderCalc3);
   }
 
   if (typeof document !== 'undefined') {
@@ -852,6 +934,8 @@
     calculateFrenchAmortization: calculateFrenchAmortization,
     simulateMinimumPayment: simulateMinimumPayment,
     compareZeroInterestVsCashDiscount: compareZeroInterestVsCashDiscount,
-    buildMinimumPaymentSvg: buildMinimumPaymentSvg
+    buildMinimumPaymentSvg: buildMinimumPaymentSvg,
+    COUNTRY_RATE_PRESETS: COUNTRY_RATE_PRESETS,
+    OPPORTUNITY_RATE_PRESETS: OPPORTUNITY_RATE_PRESETS
   };
 });

@@ -115,6 +115,20 @@ python3 -m http.server 8000
 # Luego abre http://localhost:8000 en tu navegador
 ```
 
+### Tasas oficiales de referencia (noviembre 2026)
+
+Cada calculadora trae un selector opcional con tasas oficiales, verificadas el 21-nov-2026 y con enlace a su fuente:
+
+| País | Tasa | Efectiva anual | TNA usada | Fuente |
+|---|---|---|---|---|
+| Ecuador | Activa referencial, consumo | 15,69 % | 14,66 % | [BCE](https://contenido.bce.fin.ec/documentos/Estadisticas/SectorMonFin/TasasInteres/Indice.htm) |
+| Ecuador | Activa máxima, consumo | 16,77 % | 15,60 % | [BCE](https://contenido.bce.fin.ec/documentos/Estadisticas/SectorMonFin/TasasInteres/Indice.htm) |
+| Colombia | Usura, consumo y ordinario (tope legal) | 28,34 % | 25,21 % | Superfinanciera, vía [ABC Economía](https://abceconomia.co/2026/11/03/tasa-usura-noviembre-colombia/) |
+| Perú | Tasa máxima, consumo en soles (tope legal) | 114,68 % | 78,88 % | [BCRP](https://estadisticas.bcrp.gob.pe/estadisticas/series/diarias/resultados/PD38590DD/html) |
+| Ecuador | Pasiva referencial, depósitos de 181 a 360 días | 4,83 % | 4,73 % | [BCE](https://contenido.bce.fin.ec/documentos/Estadisticas/SectorMonFin/TasasInteres/Indice.htm) |
+
+Los bancos centrales publican tasas **efectivas**. El simulador trabaja con tasa nominal anual, así que las convierte con TNA = 12 × ((1 + TEA)^(1/12) − 1). Una prueba automática comprueba que cada TNA reproduce la tasa efectiva publicada. Los topes legales no son tasas promedio.
+
 ### 2. Ejecutar las pruebas automatizadas
 El archivo `tests.js` verifica todas las funciones matemáticas con casos calculados a mano (incluyendo el caso de $1,000 a 12 cuotas al 24% TNA → cuota $94.56):
 
