@@ -224,6 +224,9 @@ console.log('\n4) Tasas oficiales de referencia (Ecuador y LATAM)');
   for (const k of ['ec_ref', 'ec_max', 'co_usura', 'pe_max']) {
     const p = COUNTRY_RATE_PRESETS[k];
     assertEqual(/^https:\/\//.test(p.url), true, 'Preset ' + k + ' tiene enlace a su fuente');
+    const forms = [String(p.ea), String(p.ea).replace('.', ',')];
+    assertEqual(Array.isArray(p.quotes) && p.quotes.some(q => forms.some(f => q.includes(f))), true,
+      'Preset ' + k + ' trae una cita literal de su fuente que contiene la tasa (verify_sources.py la comprueba en línea)');
     // Ida y vuelta: la TNA cargada debe reproducir la tasa efectiva publicada
     const r = calculateFrenchAmortization({ principal: 1000, months: 12, annualNominalRatePct: p.rate });
     assertClose(r.effectiveAnnualRatePct, p.ea, 0.02, 'TNA de ' + k + ' reproduce su tasa efectiva publicada');

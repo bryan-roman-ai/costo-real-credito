@@ -129,6 +129,8 @@ Cada calculadora trae un selector opcional con tasas oficiales, verificadas el 2
 
 Los bancos centrales publican tasas **efectivas**. El simulador trabaja con tasa nominal anual, así que las convierte con TNA = 12 × ((1 + TEA)^(1/12) − 1). Una prueba automática comprueba que cada TNA reproduce la tasa efectiva publicada. Los topes legales no son tasas promedio.
 
+**Verificación de fuentes:** `python3 verify_sources.py` descarga cada fuente y exige que aparezca la cita literal guardada con la tasa (cifra + etiqueta + período, p. ej. «02Nov26 114.68»). Buscar solo el número no basta: en una serie histórica también aparecen valores viejos. El CI corre las pruebas y esta verificación en cada push y el día 2 de cada mes, para avisar cuando un banco central publica una tasa nueva.
+
 ### 2. Ejecutar las pruebas automatizadas
 El archivo `tests.js` verifica todas las funciones matemáticas con casos calculados a mano (incluyendo el caso de $1,000 a 12 cuotas al 24% TNA → cuota $94.56):
 

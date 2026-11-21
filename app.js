@@ -498,24 +498,29 @@
     return round2(12 * (Math.pow(1 + eaPct / 100, 1 / 12) - 1) * 100);
   }
 
-  function preset(eaPct, source, url) {
-    return { ea: eaPct, rate: eaToTna(eaPct), source: source, url: url };
+  // quotes: citas LITERALES de la fuente (cifra + etiqueta + período). verify_sources.py exige que todas
+  // aparezcan en la página; así una cifra vieja o de otra fila no pasa aunque el número exista en la página.
+  function preset(eaPct, source, url, quotes) {
+    return { ea: eaPct, rate: eaToTna(eaPct), source: source, url: url, quotes: quotes };
   }
 
   const BCE_URL = 'https://contenido.bce.fin.ec/documentos/Estadisticas/SectorMonFin/TasasInteres/Indice.htm';
   const COUNTRY_RATE_PRESETS = {
     custom: { ea: null, rate: null, source: 'Ingresa la tasa nominal anual (TNA) de tu contrato o estado de cuenta.', url: null },
-    ec_ref: preset(15.69, 'Banco Central del Ecuador · tasa activa efectiva referencial, segmento Consumo, noviembre 2026', BCE_URL),
-    ec_max: preset(16.77, 'Banco Central del Ecuador · tasa activa efectiva máxima, segmento Consumo, noviembre 2026', BCE_URL),
+    ec_ref: preset(15.69, 'Banco Central del Ecuador · tasa activa efectiva referencial, segmento Consumo, noviembre 2026', BCE_URL,
+      ['Noviembre 2026', 'Consumo 15,69']),
+    ec_max: preset(16.77, 'Banco Central del Ecuador · tasa activa efectiva máxima, segmento Consumo, noviembre 2026', BCE_URL,
+      ['Noviembre 2026', 'Consumo 16,77']),
     co_usura: preset(28.34, 'Colombia · tasa de usura para crédito de consumo y ordinario certificada por la Superintendencia Financiera, noviembre 2026 (tope legal, no promedio)',
-      'https://abceconomia.co/2026/11/03/tasa-usura-noviembre-colombia/'),
+      'https://abceconomia.co/2026/11/03/tasa-usura-noviembre-colombia/', ['usura cae a 28,34% para noviembre de 2026']),
     pe_max: preset(114.68, 'Banco Central de Reserva del Perú · tasa máxima de interés convencional compensatorio para créditos de consumo en soles, vigente desde el 02-nov-2026 (tope legal, no promedio)',
-      'https://estadisticas.bcrp.gob.pe/estadisticas/series/diarias/resultados/PD38590DD/html')
+      'https://estadisticas.bcrp.gob.pe/estadisticas/series/diarias/resultados/PD38590DD/html', ['02Nov26 114.68'])
   };
 
   const OPPORTUNITY_RATE_PRESETS = {
     custom: { ea: null, rate: null, source: 'Ingresa la tasa anual que ganarías con tu dinero en otra alternativa.', url: null },
-    ec_dpf: preset(4.83, 'Banco Central del Ecuador · tasa pasiva efectiva referencial, depósitos a plazo de 181 a 360 días, noviembre 2026', BCE_URL)
+    ec_dpf: preset(4.83, 'Banco Central del Ecuador · tasa pasiva efectiva referencial, depósitos a plazo de 181 a 360 días, noviembre 2026', BCE_URL,
+      ['Noviembre 2026', 'Plazo 181-360 4,83'])
   };
 
   function initBrowserApp() {
