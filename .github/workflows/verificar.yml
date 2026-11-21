@@ -1,0 +1,19 @@
+name: Verificar pruebas y fuentes
+# En cada push corre las pruebas y comprueba que cada tasa precargada tenga su cita literal en la fuente oficial.
+# El día 2 de cada mes vuelve a correr: si el banco central ya publicó otra tasa, falla y avisa que hay que actualizar.
+on:
+  push: {}
+  pull_request: {}
+  schedule:
+    - cron: "0 14 2 * *"
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Pruebas del motor
+        run: node tests.js | tee out.log && grep -q "0 fallidas" out.log
+      - name: Tasas con cita literal en su fuente
+        run: python3 -I verify_sources.py
